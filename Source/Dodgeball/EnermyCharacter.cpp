@@ -4,6 +4,8 @@
 #include "EnermyCharacter.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -26,6 +28,11 @@ void AEnermyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// 현재 플레이어가 제어하는 캐릭터
+	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
+
+	// 매 프레임 플레이어 캐릭터를 바라본다
+	LookAtActor(PlayerCharacter);
 }
 
 // Called to bind functionality to input
@@ -37,6 +44,22 @@ void AEnermyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void AEnermyCharacter::LookAtActor(AActor* TargetActor)
 {
+	if (TargetActor == nullptr)
+	{
+		return;
+	}
+
+	if (CanSeeActor(TargetActor))
+	{
+		FVector Start = GetActorLocation();
+		FVector End = TargetActor->GetActorLocation();
+
+		// 시작 지점에서 끝 지점을 바라보는 데 필요한 회전 계산
+		FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(Start, End);
+
+		// 적의 회전을 구한 회전 값으로 설정
+		SetActorRotation(LookAtRotation);
+	}
 }
 
 bool AEnermyCharacter::CanSeeActor(const AActor* TargetActor) const
