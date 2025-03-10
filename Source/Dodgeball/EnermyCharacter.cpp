@@ -3,6 +3,8 @@
 
 #include "EnermyCharacter.h"
 #include "Engine/World.h"
+#include "DrawDebugHelpers.h"
+
 
 // Sets default values
 AEnermyCharacter::AEnermyCharacter()
@@ -66,6 +68,9 @@ bool AEnermyCharacter::CanSeeActor(const AActor* TargetActor) const
 
 	// 라인 트레이스 실행
 	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, Channel, QueryParams);
+
+	// 라인 트레이스 시각화
+	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
 
 	return Hit.bBlockingHit;
 }
