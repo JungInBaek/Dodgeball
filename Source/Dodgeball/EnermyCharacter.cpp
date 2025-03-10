@@ -95,6 +95,6 @@ bool AEnermyCharacter::CanSeeActor(const AActor* TargetActor) const
 	// 라인 트레이스 시각화
 	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
 
-	return Hit.bBlockingHit;
+	return !Hit.bBlockingHit;
 }
 
