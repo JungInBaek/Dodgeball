@@ -13,7 +13,8 @@ AEnermyCharacter::AEnermyCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	SightSource = CreateDefaultSubobject<USceneComponent>(TEXT("SightSource"));
+	SightSource->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -56,6 +57,8 @@ void AEnermyCharacter::LookAtActor(AActor* TargetActor)
 
 		// 시작 지점에서 끝 지점을 바라보는 데 필요한 회전 계산
 		FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(Start, End);
+		LookAtRotation.Pitch = 0.0f;
+		LookAtRotation.Roll = 0.0f;
 
 		// 적의 회전을 구한 회전 값으로 설정
 		SetActorRotation(LookAtRotation);
@@ -73,13 +76,13 @@ bool AEnermyCharacter::CanSeeActor(const AActor* TargetActor) const
 	FHitResult Hit;
 
 	// 라인 트레이스 시작 위치
-	FVector Start = GetActorLocation();
+	FVector Start = SightSource->GetComponentLocation();
 
 	// 라인 트레이스 끝 위치
 	FVector End = TargetActor->GetActorLocation();
 
 	// 시야 판단을 위한 트레이스 채널
-	ECollisionChannel Channel = ECollisionChannel::ECC_Visibility;
+	ECollisionChannel Channel = ECollisionChannel::ECC_GameTraceChannel1;
 
 	FCollisionQueryParams QueryParams;
 
@@ -94,6 +97,15 @@ bool AEnermyCharacter::CanSeeActor(const AActor* TargetActor) const
 
 	// 라인 트레이스 시각화
 	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
+
+	// 스윕 트레이스에서 사용되는 모형의 회전
+	//FQuat Rotation = FQuat::Identity;
+
+	// 스윕 트레이스에서 사용하는 객체의 모형
+	//FCollisionShape Shape = FCollisionShape::MakeBox(FVector(20.f, 20.f, 20.f));
+
+	// 스윕 트레이스 실행
+	//GetWorld()->SweepSingleByChannel(Hit, Start, End, Rotation, Channel, Shape);
 
 	return !Hit.bBlockingHit;
 }

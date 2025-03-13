@@ -30,4 +30,8 @@ public:
 	void LookAtActor(AActor* TargetActor);
 
 	bool CanSeeActor(const AActor* TargetActor) const;
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = LookAt, meta = (AllowPrivateAccess = "true"))
+	USceneComponent* SightSource;
 };
