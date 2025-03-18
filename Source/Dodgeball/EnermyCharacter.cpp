@@ -6,6 +6,8 @@
 #include "DrawDebugHelpers.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
+#include "DodgeballProjectile.h"
 
 
 // Sets default values
@@ -33,7 +35,21 @@ void AEnermyCharacter::Tick(float DeltaTime)
 	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
 
 	// 매 프레임 플레이어 캐릭터를 바라본다
-	LookAtActor(PlayerCharacter);
+	bCanSeePlayer = LookAtActor(PlayerCharacter);
+
+	if (bCanSeePlayer != bPreviousCanSeePlayer)
+	{
+		if (bCanSeePlayer)
+		{
+			GetWorldTimerManager().SetTimer(ThrowTimerHandle, this, &AEnermyCharacter::ThrowDodgeball, ThrowingInterval, true, ThrowingDelay);
+		}
+		else
+		{
+			GetWorldTimerManager().ClearTimer(ThrowTimerHandle);
+		}
+	}
+
+	bPreviousCanSeePlayer = bCanSeePlayer;
 }
 
 // Called to bind functionality to input
@@ -43,11 +59,11 @@ void AEnermyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
-void AEnermyCharacter::LookAtActor(AActor* TargetActor)
+bool AEnermyCharacter::LookAtActor(AActor* TargetActor)
 {
 	if (TargetActor == nullptr)
 	{
-		return;
+		return false;
 	}
 
 	if (CanSeeActor(TargetActor))
@@ -62,7 +78,10 @@ void AEnermyCharacter::LookAtActor(AActor* TargetActor)
 
 		// 적의 회전을 구한 회전 값으로 설정
 		SetActorRotation(LookAtRotation);
+		return true;
 	}
+
+	return false;
 }
 
 bool AEnermyCharacter::CanSeeActor(const AActor* TargetActor) const
@@ -108,5 +127,19 @@ bool AEnermyCharacter::CanSeeActor(const AActor* TargetActor) const
 	//GetWorld()->SweepSingleByChannel(Hit, Start, End, Rotation, Channel, Shape);
 
 	return !Hit.bBlockingHit;
+}
+
+void AEnermyCharacter::ThrowDodgeball()
+{
+	if (DodgeballClass == nullptr)
+	{
+		return;
+	}
+
+	FVector ForwardVector = GetActorForwardVector();
+	float SpawnDistance = 40.f;
+	FVector SpawnLocation = GetActorLocation() + (ForwardVector * SpawnDistance);
+	
+	GetWorld()->SpawnActor<ADodgeballProjectile>(DodgeballClass, SpawnLocation, GetActorRotation());
 }
 
