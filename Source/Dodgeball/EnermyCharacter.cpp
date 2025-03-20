@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 #include "DodgeballProjectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 
 // Sets default values
@@ -139,7 +140,10 @@ void AEnermyCharacter::ThrowDodgeball()
 	FVector ForwardVector = GetActorForwardVector();
 	float SpawnDistance = 40.f;
 	FVector SpawnLocation = GetActorLocation() + (ForwardVector * SpawnDistance);
-	
-	GetWorld()->SpawnActor<ADodgeballProjectile>(DodgeballClass, SpawnLocation, GetActorRotation());
+	FTransform SpawnTransform = FTransform(GetActorRotation(), SpawnLocation);
+
+	ADodgeballProjectile* Projectile = GetWorld()->SpawnActorDeferred<ADodgeballProjectile>(DodgeballClass, SpawnTransform);
+	Projectile->GetProjectileMovementComponent()->InitialSpeed = 2200;
+	Projectile->FinishSpawning(SpawnTransform);
 }
 

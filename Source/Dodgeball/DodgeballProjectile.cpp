@@ -2,6 +2,7 @@
 
 
 #include "DodgeballProjectile.h"
+#include "Components/SphereComponent.h"
 #include "DodgeballCharacter.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
@@ -43,6 +44,7 @@ void ADodgeballProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 {
 	if (Cast<ADodgeballCharacter>(OtherActor) != nullptr)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit Player"));
 		Destroy();
 	}
 }
