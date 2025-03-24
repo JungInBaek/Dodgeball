@@ -36,4 +36,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Dodgeball, meta = (AllowPrivateAccess = "true"))
 	class UProjectileMovementComponent* ProjectileMovement;
+
+protected:
+	UPROPERTY(EditAnywhere, Category = Damage)
+	float Damage = 34.f;
 };

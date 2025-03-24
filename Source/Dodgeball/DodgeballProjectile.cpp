@@ -5,6 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "DodgeballCharacter.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "HealthComponent.h"
 
 
 // Sets default values
@@ -42,8 +43,14 @@ void ADodgeballProjectile::Tick(float DeltaTime)
 
 void ADodgeballProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (Cast<ADodgeballCharacter>(OtherActor) != nullptr)
+	ADodgeballCharacter* Player = Cast<ADodgeballCharacter>(OtherActor);
+	if (Player != nullptr)
 	{
+		UHealthComponent* HealthComponent = Player->FindComponentByClass<UHealthComponent>();
+		if (HealthComponent != nullptr)
+		{
+			HealthComponent->LoseHealth(Damage);
+		}
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit Player"));
 		Destroy();
 	}
