@@ -3,12 +3,12 @@
 
 #include "EnermyCharacter.h"
 #include "Engine/World.h"
-#include "DrawDebugHelpers.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 #include "DodgeballProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "DodgeballFunctionLibrary.h"
 
 
 // Sets default values
@@ -67,7 +67,9 @@ bool AEnermyCharacter::LookAtActor(AActor* TargetActor)
 		return false;
 	}
 
-	if (CanSeeActor(TargetActor))
+	const TArray<const AActor*> IgnoreActors = { this, TargetActor };
+
+	if (UDodgeballFunctionLibrary::CanSeeActor(GetWorld(), SightSource->GetComponentLocation(), TargetActor, IgnoreActors))
 	{
 		FVector Start = GetActorLocation();
 		FVector End = TargetActor->GetActorLocation();
@@ -83,51 +85,6 @@ bool AEnermyCharacter::LookAtActor(AActor* TargetActor)
 	}
 
 	return false;
-}
-
-bool AEnermyCharacter::CanSeeActor(const AActor* TargetActor) const
-{
-	if (TargetActor == nullptr)
-	{
-		return false;
-	}
-
-	// 라인 트레이스 결과 저장
-	FHitResult Hit;
-
-	// 라인 트레이스 시작 위치
-	FVector Start = SightSource->GetComponentLocation();
-
-	// 라인 트레이스 끝 위치
-	FVector End = TargetActor->GetActorLocation();
-
-	// 시야 판단을 위한 트레이스 채널
-	ECollisionChannel Channel = ECollisionChannel::ECC_GameTraceChannel1;
-
-	FCollisionQueryParams QueryParams;
-
-	// 라인 트레이스를 실행하는 액터 무시
-	QueryParams.AddIgnoredActor(this);
-
-	// 타겟 액터 무시
-	QueryParams.AddIgnoredActor(TargetActor);
-
-	// 라인 트레이스 실행
-	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, Channel, QueryParams);
-
-	// 라인 트레이스 시각화
-	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
-
-	// 스윕 트레이스에서 사용되는 모형의 회전
-	//FQuat Rotation = FQuat::Identity;
-
-	// 스윕 트레이스에서 사용하는 객체의 모형
-	//FCollisionShape Shape = FCollisionShape::MakeBox(FVector(20.f, 20.f, 20.f));
-
-	// 스윕 트레이스 실행
-	//GetWorld()->SweepSingleByChannel(Hit, Start, End, Rotation, Channel, Shape);
-
-	return !Hit.bBlockingHit;
 }
 
 void AEnermyCharacter::ThrowDodgeball()
