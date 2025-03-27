@@ -6,11 +6,12 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "HealthComponent.h"
+#include "HealthInterface.h"
 #include "DodgeballCharacter.generated.h"
 
 
 UCLASS(config=Game)
-class ADodgeballCharacter : public ACharacter
+class ADodgeballCharacter : public ACharacter, public IHealthInterface
 {
 	GENERATED_BODY()
 
@@ -52,6 +53,9 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+public:
+	virtual void OnDeath_Implementation() override;
 
 private:
 	class UHealthComponent* HealthComponent;

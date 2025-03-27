@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,6 +74,11 @@ void ADodgeballCharacter::BeginPlay()
 			Subsystem->AddMappingContext(IC_Character, 0);
 		}
 	}
+}
+
+void ADodgeballCharacter::OnDeath_Implementation()
+{
+	UKismetSystemLibrary::QuitGame(this, nullptr, EQuitPreference::Quit, true);
 }
 
 //////////////////////////////////////////////////////////////////////////
