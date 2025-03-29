@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "EnermyCharacter.generated.h"
 
+
 UCLASS()
 class DODGEBALL_API AEnermyCharacter : public ACharacter
 {
@@ -27,13 +28,11 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
-	bool LookAtActor(AActor* TargetActor);
-
 	void ThrowDodgeball();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = LookAt, meta = (AllowPrivateAccess = "true"))
-	USceneComponent* SightSource;
+	class ULookAtActorComponent* LookAtActorComponent;
 
 protected:
 	// 이번 프레임에 플레이어를 볼 수 있는지 여부
