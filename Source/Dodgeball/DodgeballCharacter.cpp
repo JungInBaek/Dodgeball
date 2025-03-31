@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "DodgeballPlayerController.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,7 +79,11 @@ void ADodgeballCharacter::BeginPlay()
 
 void ADodgeballCharacter::OnDeath_Implementation()
 {
-	UKismetSystemLibrary::QuitGame(this, nullptr, EQuitPreference::Quit, true);
+	ADodgeballPlayerController* PlayerController = Cast<ADodgeballPlayerController>(GetController());
+	if (PlayerController != nullptr)
+	{
+		PlayerController->ShowRestartWidget();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
