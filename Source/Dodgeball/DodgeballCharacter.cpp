@@ -104,7 +104,6 @@ void ADodgeballCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 		//Moving
 		EnhancedPlayerInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ADodgeballCharacter::Move);
 	}
-
 }
 
 void ADodgeballCharacter::Move(const FInputActionValue& Value)
