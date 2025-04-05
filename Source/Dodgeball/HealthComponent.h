@@ -27,6 +27,8 @@ public:
 public:
 	void LoseHealth(float Amount);
 
+	FORCEINLINE float GetHealthPercent() const { return Health / 100.f; }
+
 protected:
 	// 소유자의 초기 및 현재 체력의 양
 	UPROPERTY(EditDefaultsOnly, Category = Health)
