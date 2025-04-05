@@ -20,8 +20,14 @@ public:
 protected:
 	UFUNCTION()
 	void OnRestartClicked();
+
+	UFUNCTION()
+	void OnExitClicked();
 	
 public:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* RestartButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ExitButton;
 };
