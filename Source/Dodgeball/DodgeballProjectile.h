@@ -43,4 +43,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Sound)
 	class USoundBase* BounceSound;
+
+	UPROPERTY(EditAnywhere, Category = Sound)
+	class USoundAttenuation* BounceSoundAttenuation;
 };
