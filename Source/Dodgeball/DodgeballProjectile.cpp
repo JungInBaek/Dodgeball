@@ -57,7 +57,7 @@ void ADodgeballProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 		{
 			HealthComponent->LoseHealth(Damage);
 		}
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit Player"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit Player"));
 		Destroy();
 	}
 }
